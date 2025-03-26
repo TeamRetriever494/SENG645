@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome, {{ user }}!</h2>
+    <form method="POST" class="form">
+      <input type="text" name="smiles" placeholder="Enter SMILES notation" required>
+      <button type="submit">Predict</button>
+    </form>
+
+    <div class="nav-links">
+      <a href="/history">View History</a>
+    </div>
+
+  
+    {% if error %}
+      <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if predictions %}
+      <div class="results">
+        <h3>Predictions</h3>
+        <ul>
+          {% for key, value in predictions.items() %}
+            <li><strong>{{ key }}:</strong> {{ value }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <a href="/logout" class="btn-logout">Logout</a>
+  </div>
+</body>
+</html>
+
+
