@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prediction History</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-start p-6">
+
+  <div class="w-full max-w-3xl">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Prediction History</h1>
+      <a href="/home" class="text-blue-600 hover:underline">← Back to Home</a>
+    </div>
+
+    {% if records|length == 0 %}
+      <div class="bg-white p-6 rounded-xl shadow text-center text-gray-600">
+        You have no prediction history yet.
+      </div>
+    {% else %}
+      <div class="space-y-6">
+        {% for record in records %}
+          <div class="bg-white p-6 rounded-xl shadow">
+            <p class="mb-2 text-gray-800"><strong>SMILES:</strong> <span class="text-gray-700">{{ record.smiles }}</span></p>
+            <div>
+              <p class="font-semibold text-gray-800 mb-1">Predictions:</p>
+              <ul class="list-disc pl-6 text-gray-700">
+                {% for key, value in record.predictions.items() %}
+                  <li><strong>{{ key }}:</strong> {{ value }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+</body>
+</html>
+
