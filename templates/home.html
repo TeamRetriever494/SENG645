@@ -1,41 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta charset="UTF-8">
+    <title>Chemical Property Predictor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="container">
-    <h2>Welcome, {{ user }}!</h2>
-    <form method="POST" class="form">
-      <input type="text" name="smiles" placeholder="Enter SMILES notation" required>
-      <button type="submit">Predict</button>
-    </form>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center py-10">
+        <div class="bg-white shadow-xl rounded-lg p-8 w-full max-w-5xl">
+            <!-- Header -->
+            <h1 class="text-3xl font-bold text-center text-blue-700 mb-2">Chemical Property Predictor</h1>
+            <p class="text-center text-gray-700 mb-6">Welcome, <strong>{{ user }}</strong></p>
 
-    <div class="nav-links">
-      <a href="/history">View History</a>
+            <!-- Input Form -->
+            <form method="POST" class="mb-6">
+                <label for="smiles" class="block text-sm font-semibold text-gray-700 mb-1">SMILES Notation:</label>
+                <input type="text" name="smiles" id="smiles" required
+                       class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       placeholder="Enter SMILES notation...">
+                <div class="text-center mt-4">
+                    <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+                        Predict
+                    </button>
+                </div>
+            </form>
+
+            <!-- Error Message -->
+            {% if error %}
+                <div class="text-red-500 text-center font-semibold mb-4">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            {% if predictions %}
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mt-8">
+                <!-- Molecule Viewer Container -->
+                <div class="flex justify-center items-center">
+                    <div class="w-80 h-80 border rounded shadow relative">
+                        <div id="molViewer" class="w-full h-full"></div>
+                    </div>
+                </div>
+
+                <!-- Prediction Info -->
+                <div class="text-gray-800">
+                    <h2 class="text-xl font-bold text-green-700 mb-4">Predicted Properties</h2>
+                    <ul class="space-y-2">
+                        <li><strong>ALogP:</strong> {{ predictions['ALogP'] }}</li>
+                        <li><strong>CxLogP:</strong> {{ predictions['CxLogP'] }}</li>
+                        <li><strong>Molecular Weight:</strong> {{ predictions['Molecular Weight'] }}</li>
+                        <li><strong>Polar Surface Area:</strong> {{ predictions['Polar Surface Area'] }}</li>
+                        <li><strong>Rotatable Bonds:</strong> {{ predictions['Rotatable Bonds'] }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 3Dmol Viewer Script -->
+            <script>
+                const molData = `{{ mol_block | safe }}`;
+                const viewer = $3Dmol.createViewer("molViewer", {
+                    backgroundColor: "white"
+                });
+                viewer.addModel(molData, "mol");
+                viewer.setStyle({}, { stick: {}, sphere: { scale: 0.3 } });
+                viewer.zoomTo();
+                viewer.render();
+            </script>
+            {% endif %}
+
+            <!-- Navigation -->
+            <div class="mt-10 flex justify-between text-sm">
+                <a href="/history" class="text-blue-600 hover:underline">View Prediction History</a>
+                <a href="/logout" class="text-red-600 hover:underline">Logout</a>
+            </div>
+        </div>
     </div>
-
-  
-    {% if error %}
-      <p style="color: red;">{{ error }}</p>
-    {% endif %}
-
-    {% if predictions %}
-      <div class="results">
-        <h3>Predictions</h3>
-        <ul>
-          {% for key, value in predictions.items() %}
-            <li><strong>{{ key }}:</strong> {{ value }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-
-    <a href="/logout" class="btn-logout">Logout</a>
-  </div>
 </body>
 </html>
 
