@@ -1,41 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Prediction History</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <title>Prediction History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-start p-6">
-
-  <div class="w-full max-w-3xl">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">Prediction History</h1>
-      <a href="/home" class="text-blue-600 hover:underline">← Back to Home</a>
-    </div>
-
-    {% if records|length == 0 %}
-      <div class="bg-white p-6 rounded-xl shadow text-center text-gray-600">
-        You have no prediction history yet.
-      </div>
-    {% else %}
-      <div class="space-y-6">
-        {% for record in records %}
-          <div class="bg-white p-6 rounded-xl shadow">
-            <p class="mb-2 text-gray-800"><strong>SMILES:</strong> <span class="text-gray-700">{{ record.smiles }}</span></p>
-            <div>
-              <p class="font-semibold text-gray-800 mb-1">Predictions:</p>
-              <ul class="list-disc pl-6 text-gray-700">
-                {% for key, value in record.predictions.items() %}
-                  <li><strong>{{ key }}:</strong> {{ value }}</li>
-                {% endfor %}
-              </ul>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center py-10">
+        <div class="bg-white shadow-xl rounded-lg p-8 w-full max-w-4xl">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-blue-700">Prediction History</h1>
+                <a href="/home" class="text-blue-600 hover:underline text-sm">← Back to Home</a>
             </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-  </div>
 
+            <!-- Content -->
+            {% if records|length == 0 %}
+                <div class="bg-gray-100 text-center py-6 rounded text-gray-600 font-medium">
+                    You have no prediction history yet.
+                </div>
+            {% else %}
+                <div class="space-y-6">
+                    {% for record in records %}
+                        <div class="border border-gray-300 rounded-md p-4 bg-gray-50 shadow-sm">
+                            <p class="font-semibold text-gray-700"><strong>SMILES:</strong> {{ record.smiles }}</p>
+                            <div class="mt-2">
+                                <p class="font-semibold text-gray-700 mb-1">Predictions:</p>
+                                <ul class="pl-4 list-disc text-gray-800 space-y-1">
+                                    {% for key, value in record.predictions.items() %}
+                                        <li><strong>{{ key }}:</strong> {{ value }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <form action="/delete_history/{{ record._id }}" method="POST" class="mt-4">
+                              <button type="submit" class="text-red-600 text-sm hover:underline">Delete</button>
+                          </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>
 
