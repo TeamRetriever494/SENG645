@@ -1,127 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Register</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
+    body, html {
       margin: 0;
       padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      position: relative;
     }
 
-    .bg-video {
+    video#bgVideo {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: contain; /* Use 'contain' to show full video */
-      background-color: black;
-      z-index: -1;
-    }
-
-    .register-container {
-      position: absolute;
       top: 50%;
       left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
       transform: translate(-50%, -50%);
-      background-color: rgba(255, 255, 255, 0.95);
+      z-index: -1;
+      object-fit: cover;
+    }
+
+    .register-box {
+      background-color: rgba(255, 255, 255, 0.9);
       padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
       width: 90%;
-      max-width: 400px;
+      max-width: 350px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      text-align: center;
     }
 
-    h2 {
+    .register-box h2 {
       margin-bottom: 20px;
-      color: #333;
     }
 
-    input[type="email"],
-    input[type="password"] {
+    .register-box input {
       width: 100%;
       padding: 12px;
       margin: 10px 0;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
+      border-radius: 8px;
+      font-size: 16px;
     }
 
-    button {
+    .register-box button {
       width: 100%;
       padding: 12px;
       background-color: #28a745;
       color: white;
       border: none;
-      border-radius: 6px;
-      font-size: 1rem;
+      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
-      margin-top: 10px;
+      transition: background 0.3s ease;
     }
 
-    button:hover {
+    .register-box button:hover {
       background-color: #218838;
     }
 
-    .message {
-      color: red;
-      margin-top: 10px;
+    .register-box p {
+      margin-top: 12px;
     }
 
-    .login-link {
-      margin-top: 15px;
-      text-align: center;
-    }
-
-    .login-link a {
+    .register-box a {
       color: #007bff;
       text-decoration: none;
     }
 
-    .login-link a:hover {
-      text-decoration: underline;
+    @media screen and (max-height: 500px) {
+      .register-box {
+        padding: 20px 15px;
+      }
     }
   </style>
 </head>
 <body>
+  <video autoplay muted loop id="bgVideo">
+    <source src="{{ url_for('static', filename='register.mp4') }}" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
 
-<video class="bg-video" autoplay muted loop playsinline>
-  <source src="{{ url_for('static', filename='register.mp4') }}" type="video/mp4" />
-  Your browser does not support the video tag.
-</video>
-
-<div class="register-container">
-  <h2>Register</h2>
-  <form method="POST" action="/register">
-    <input type="email" name="email" placeholder="Email" required />
-    <input type="password" name="password" placeholder="Password (1 uppercase, 1 number)" required />
-    <button type="submit">Register</button>
-  </form>
-
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <div class="message">
-        {% for message in messages %}
-          <p>{{ message }}</p>
-        {% endfor %}
-      </div>
-    {% endif %}
-  {% endwith %}
-
-  <div class="login-link">
-    <p>Already have an account? <a href="/login">Login here</a></p>
+  <div class="register-box">
+    <h2>Register</h2>
+    <form method="POST">
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password (1 uppercase, 1 number)" required>
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
   </div>
-</div>
-
 </body>
 </html>
 
