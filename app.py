@@ -8,6 +8,7 @@ import numpy as np
 from pymongo import MongoClient
 import re
 import os
+from flask import send_from_directory
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -154,6 +155,16 @@ def logout():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))  # Use PORT from environment, default to 5000
     app.run(host='0.0.0.0', port=port, debug=True)
+
+# Serve manifest.json from the static folder
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest.json', mimetype='application/json')
+
+# Serve service-worker.js from the static folder
+@app.route('/service-worker.js')
+def service_worker():
+    return send_from_directory('static', 'service-worker.js', mimetype='application/javascript')
 
 
 
