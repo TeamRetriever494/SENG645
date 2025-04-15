@@ -1,49 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Prediction History</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="manifest" href="/static/manifest.json">
-    <script src="/static/app.js"></script>
-    <meta name="theme-color" content="#1a73e8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="/manifest.json">
+  <script src="/static/app.js"></script>
+  <meta name="theme-color" content="#1a73e8">
 
+  <title>Register</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    video#bgVideo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      object-fit: cover;
+    }
+
+    .register-box {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 350px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .register-box h2 {
+      margin-bottom: 20px;
+    }
+
+    .register-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .register-box button {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .register-box button:hover {
+      background-color: #218838;
+    }
+
+    .register-box p {
+      margin-top: 12px;
+    }
+
+    .register-box a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .flash-message {
+      color: red;
+      font-size: 14px;
+      margin-top: -5px;
+      margin-bottom: 10px;
+    }
+
+    @media screen and (max-height: 500px) {
+      .register-box {
+        padding: 20px 15px;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center py-10">
-        <div class="bg-white shadow-xl rounded-lg p-8 w-full max-w-4xl">
-            <!-- Header -->
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold text-blue-700">Prediction History</h1>
-                <a href="/home" class="text-blue-600 hover:underline text-sm">← Back to Home</a>
-            </div>
+<body>
+  <video autoplay muted loop id="bgVideo">
+    <source src="{{ url_for('static', filename='register.mp4') }}" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
 
-            <!-- Content -->
-            {% if records|length == 0 %}
-                <div class="bg-gray-100 text-center py-6 rounded text-gray-600 font-medium">
-                    You have no prediction history yet.
-                </div>
-            {% else %}
-                <div class="space-y-6">
-                    {% for record in records %}
-                        <div class="border border-gray-300 rounded-md p-4 bg-gray-50 shadow-sm">
-                            <p class="font-semibold text-gray-700"><strong>SMILES:</strong> {{ record.smiles }}</p>
-                            <div class="mt-2">
-                                <p class="font-semibold text-gray-700 mb-1">Predictions:</p>
-                                <ul class="pl-4 list-disc text-gray-800 space-y-1">
-                                    {% for key, value in record.predictions.items() %}
-                                        <li><strong>{{ key }}:</strong> {{ value }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <form action="/delete_history/{{ record._id }}" method="POST" class="mt-4">
-                              <button type="submit" class="text-red-600 text-sm hover:underline">Delete</button>
-                          </form>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        </div>
-    </div>
+  <div class="register-box">
+    <h2>Register</h2>
+    
+    <!-- Flash messages from Flask -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password (1 uppercase, 1 number)" required>
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+  </div>
 </body>
 </html>
