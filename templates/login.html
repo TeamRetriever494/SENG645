@@ -5,9 +5,7 @@
   <meta name="theme-color" content="#0d6efd">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="/manifest.json">
-<script src="/static/app.js"></script>
-<meta name="theme-color" content="#1a73e8">
+  <script src="/static/app.js"></script>
 
   <title>Login</title>
   <style>
@@ -83,6 +81,24 @@
       color: #007bff;
       text-decoration: none;
     }
+
+    .flash-warning {
+      background-color: #fff3cd;
+      color: #856404;
+      border-left: 5px solid #ffc107;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .flash-warning::before {
+      content: "⚠️";
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
@@ -93,6 +109,15 @@
 
   <div class="login-box">
     <h2>Login</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash-warning">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     <form method="POST">
       <input type="email" name="email" placeholder="Email" required>
       <input type="password" name="password" placeholder="Password" required>
